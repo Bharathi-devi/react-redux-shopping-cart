@@ -1,6 +1,14 @@
 import React from "react";
+import { CLEAR_CART, GET_TOTAL, TOGGLE_AMOUNT } from "./actionTypes";
+import {connect} from "react-redux";
 import CartItem from "./CartItem";
-const CartContainer = ({ cart = [] }) => {
+const CartContainer = ({ cart = [],total,dispatch }) => {
+  
+    React.useEffect(() => {
+      dispatch({type:GET_TOTAL});
+      dispatch({type:TOGGLE_AMOUNT});
+      
+    });
   if (cart.length === 0) {
     return (
       <section className="cart">
@@ -29,13 +37,19 @@ const CartContainer = ({ cart = [] }) => {
         <hr />
         <div className="cart-total">
           <h4>
-            total <span>$0.00</span>
+            total <span>{total}</span>
           </h4>
         </div>
-        <button className="btn clear-btn">clear cart</button>
+        <button className="btn clear-btn" onClick={()=>dispatch({type:CLEAR_CART})}>clear cart</button>
       </footer>
     </section>
   );
 };
 
-export default CartContainer;
+function mapStateToProps(store)
+{
+  const {cart,total}=store;
+  return {cart,total};
+}
+
+export default  connect(mapStateToProps)(CartContainer);
